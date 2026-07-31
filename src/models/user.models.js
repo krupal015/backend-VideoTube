@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
             index: true
         },
         avatar: {
-            type: string, // url-cloudanary
+            type: String, // url-cloudanary
             required: true,
         },
         coverImage: {
@@ -45,48 +45,54 @@ const userSchema = new mongoose.Schema(
             required: [true, "password is required"]
         },
         refreshToken: {
-            type: string
+            type: String
         }
 
-    }, { timestamps:true }
+    }, { timestamps: true }
 )
 
-userSchema.pre("save", function(next){
-    if(! this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
 
-    this.password = bcrypt.hash(this.password,10)
-    next()
-})
+    this.password = await bcrypt.hash(this.password, 10);
+});
 
-userSchema.methods.isPasswordCorrect = async function(password){
-   return await bcrypt.compare(password,this.password)
+// userSchema.pre("save",async function (next) {
+//     if (!this.isModified("password")) return next();
+
+//     this.password = await bcrypt.hash(this.password, 10)
+//     next()
+// })
+
+userSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessToken = function(){
-  return  jwt.sign(
+userSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
         {
-            _id:this._id,
-            email:this.email,
-            userName:this.userName,
-            fullName:this.fullName
+            _id: this._id,
+            email: this.email,
+            userName: this.userName,
+            fullName: this.fullName
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
     )
-} 
+}
 
-userSchema.methods.RefreshToken = function(){
-   return jwt.sign(
+userSchema.methods.generateRefreshToken = function () {
+    return jwt.sign(
         {
-            _id:this._id
+            _id: this._id
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn:process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
-} 
+}
 
 export const User = mongoose.model("User", userSchema)

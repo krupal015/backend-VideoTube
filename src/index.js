@@ -1,8 +1,9 @@
-import app from './app.js'
 import dotenv from 'dotenv'
-import connectDb from './db/db.js'
 
 dotenv.config({path:"./.env"})
+
+import app from './app.js'
+import connectDb from './db/db.js'
 
 connectDb().
     then(
@@ -13,5 +14,6 @@ connectDb().
         console.log("mongodb connection failed",error);
         
     })
+
 
  
