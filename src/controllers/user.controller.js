@@ -14,7 +14,8 @@ import { User } from '../models/user.models.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js'
 import {apiResponse} from '../utils/apiResponse.js'
 import bcrypt from "bcrypt"
-
+import { verify } from "jsonwebtoken"
+import jwt from 'jsonwebtoken'
 
 
 const generateAccessTokenAndRefreshToken = async(userId) => {
@@ -31,9 +32,6 @@ const generateAccessTokenAndRefreshToken = async(userId) => {
         throw new ApiError(500,"something went wrong")
     }
 }
-
-
-
 
 const registerUser = asyncHandler(async (req, res) => {
 
@@ -107,8 +105,6 @@ const registerUser = asyncHandler(async (req, res) => {
      console.log("6");
 
 })
-
-
 
 // login user
 // get data from the frontend
@@ -196,11 +192,54 @@ console.log(3)
    console.log(4)
 })
 
+const refreshAccessToken = asyncHandler(async (req,res) => {
+  const incomingRefreshtoken =  req.cookies.refreshToken || req.body.refreshToken
+
+  if(!incomingRefreshtoken){
+    throw new ApiError(402,"unauthorized access")
+  }
+try {
+    
+      const decodedToken = jwt.verify(
+        refreshAccessToken,
+        process.env.REFRESH_TOKEN_SECRET
+      )
+    
+      const user = await User.findById(decodedToken?._id);
+    
+       if(!user){
+        throw new ApiError(402,"invalid access token");
+      }
+    
+    //   to check if both refresh token are same 
+      if(incomingRefreshtoken !== user?.refreshToken){
+        throw new ApiError(403,"refresh token is expired or used");
+      }
+      const options = {
+        httpOnly:true,
+        secure:true
+      }
+    
+      const{accessToken,refreshToken} = generateAccessTokenAndRefreshToken(user._id);
+    
+      return res
+            .status(200)
+            .cookie('accessToken',accessToken,options)
+            .cookie('refreshToken',newRefreshToken,options)
+            .json(
+                new apiResponse(200,{accessToken,newRefreshToken},"")
+            )
+    
+} catch (error) {
+    throw new ApiError(401,error?.message || "something went wrong")
+}
+})
+
 export {
     registerUser,
     loginUser,
-    logoutUser
-
+    logoutUser,
+    refreshAccessToken
 }
 
 
