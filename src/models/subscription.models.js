@@ -8,7 +8,7 @@ const subscriptionSchema = new mongoose.Schema(
             ref:"User"
         },
         channel:{
-             Type:Schema.Types.ObjectId, //the one whom subscriber is subscribing
+             Type:Schema.Types.ObjectId, //the one whom 'subscriber' is subscribing
             ref:"User"
         }
     },{timestamps:true}
