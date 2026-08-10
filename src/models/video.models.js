@@ -31,7 +31,7 @@ const videoSchema = new mongoose.Schema(
             type:Boolean,
             default:true
         },
-        videoOwner:{
+        owner:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
         }
