@@ -16,7 +16,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const skip = (pageNumber - 1) * limitNumber;
     //TODO: get all videos based on query, sort, pagination
     const videos = await Video.find({})
-        .sort({ createdAt: 1 })
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNumber)
         .populate("owner", "avatar")
