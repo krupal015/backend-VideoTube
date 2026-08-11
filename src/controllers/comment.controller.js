@@ -11,8 +11,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
     const comments = await Comment.find({
         video: videoId
-    }).populate("user", "avatar")
+    })
 
+  await comments.populate("user", "avatar")
     return res.status(200).json(
         new ApiResponse(
             200,
