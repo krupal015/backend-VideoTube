@@ -7,7 +7,6 @@ const playlistSchema = new Schema({
     },
     description: {
         type: String,
-        required: true
     },
     videos: [
         {
@@ -15,7 +14,7 @@ const playlistSchema = new Schema({
             ref: "Video"
         }
     ],
-    owner: {
+    createdBy: {
         type: Schema.Types.ObjectId,
         ref: "User"
     },
