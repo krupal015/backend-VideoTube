@@ -1,10 +1,12 @@
 import mongoose, { Schema } from "mongoose";
+import { User } from '../models/user.models.js';
+
 // import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const tweetSchema = new Schema(
     {
          content:{
-            type:"string",
+            type:String,
             required:true
          },
          owner:{

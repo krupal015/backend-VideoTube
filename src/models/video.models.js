@@ -4,19 +4,19 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 const videoSchema = new mongoose.Schema(
     {
         videoFile:{
-            type:string,//cloudanary url
+            type:String,//cloudanary url
             required:true 
         },
          thumbnail:{
-            type:string, //cloudanary url
+            type:String, //cloudanary url
             required:true 
         },
          title:{
-            type:string,
+            type:String,
             required:true,
         },
         description:{
-            type:string,
+            type:String,
             required:true
         },
         duration:{
