@@ -12,6 +12,10 @@ app.use(cors({
 app.use(express.json({limit:"16kb"}))
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
 
+app.get("/", (req, res) => {
+  res.send("VideoTube Backend is Running");
+});
+
 
 // its a public folder that is used to store static data like photos and other data
 app.use(express.static("public"))
